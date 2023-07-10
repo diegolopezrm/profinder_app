@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>629620422354-qhj8e4s576b24qiv90uhn2j8ph4vt8sl.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.629620422354-qhj8e4s576b24qiv90uhn2j8ph4vt8sl</string>
+	<key>API_KEY</key>
+	<string>AIzaSyA9pfBNPyWE-Ag89av8XEeYk5I8OBn1ObM</string>
+	<key>GCM_SENDER_ID</key>
+	<string>629620422354</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.profinder.app</string>
+	<key>PROJECT_ID</key>
+	<string>profinderappuis</string>
+	<key>STORAGE_BUCKET</key>
+	<string>profinderappuis.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:629620422354:ios:d7ad78d813266992031f0b</string>
+</dict>
+</plist>
