@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "629620422354",
+    "project_id": "profinderappuis",
+    "storage_bucket": "profinderappuis.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:629620422354:android:5bb255a740334a90031f0b",
+        "android_client_info": {
+          "package_name": "com.dl.gps_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "629620422354-brahqnc0dkgbflnfa7l7rqguai09jec5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAa3lY4IqQfr2JGLQNbpHjEYeocAGOrBuQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "629620422354-brahqnc0dkgbflnfa7l7rqguai09jec5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
