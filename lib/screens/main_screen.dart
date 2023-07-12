@@ -9,6 +9,8 @@ import 'package:profinder_app/utils/my_colors.dart';
 import '../controller/auth_controller.dart';
 import '../routes/app_routes.dart';
 
+import '../widgets/profile.dart';
+
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -72,7 +74,7 @@ class _MainScreenState extends State<MainScreen> {
       const Placeholder(),
       const Placeholder(),
       const Placeholder(),
-      const Placeholder(),
+      ProfileScreen(),
     ];
   }
 
@@ -100,7 +102,7 @@ class _MainScreenState extends State<MainScreen> {
               Icon(Icons.book,
                   size: 30, color: MyColors.primary),
               Icon(Icons.people, size: 30, color: MyColors.primary),
-              Icon(Icons.emoji_events,
+              Icon(Icons.account_circle,
                   size: 30, color: MyColors.primary),
              ],
             onTap: (index) {
