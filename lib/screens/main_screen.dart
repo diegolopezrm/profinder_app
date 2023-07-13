@@ -4,11 +4,12 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:profinder_app/screens/category/category_home_screen.dart';
 import 'package:profinder_app/utils/my_colors.dart';
+import 'package:profinder_app/widgets/upload_data.dart';
 
 import '../controller/auth_controller.dart';
 import '../routes/app_routes.dart';
-
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -31,8 +32,6 @@ class _MainScreenState extends State<MainScreen> {
 
     setState(() {});
   }
-
-
 
   Future<void> fetchData() async {
     DocumentSnapshot doc = await FirebaseFirestore.instance
@@ -68,11 +67,11 @@ class _MainScreenState extends State<MainScreen> {
 
   List<Widget> _buildScreens() {
     return [
+      const CategoryHomeScreen(),
       const Placeholder(),
       const Placeholder(),
       const Placeholder(),
-      const Placeholder(),
-      const Placeholder(),
+      const MyWidget()
     ];
   }
 
@@ -97,14 +96,11 @@ class _MainScreenState extends State<MainScreen> {
             items: const <Widget>[
               Icon(Icons.home, size: 30, color: MyColors.primary),
               Icon(Icons.search, size: 30, color: MyColors.primary),
-              Icon(Icons.book,
-                  size: 30, color: MyColors.primary),
+              Icon(Icons.book, size: 30, color: MyColors.primary),
               Icon(Icons.people, size: 30, color: MyColors.primary),
-              Icon(Icons.emoji_events,
-                  size: 30, color: MyColors.primary),
-             ],
+              Icon(Icons.emoji_events, size: 30, color: MyColors.primary),
+            ],
             onTap: (index) {
-
               setState(() {
                 _page = index;
               });
