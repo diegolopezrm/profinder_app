@@ -3,20 +3,33 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:profinder_app/controller/profile_controller.dart';
 import 'package:profinder_app/models/app_user.dart';
+import 'package:profinder_app/utils/my_colors.dart';
 
 class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(ProfileController());
 
+    String calculateAge(DateTime birthDate) {
+      DateTime currentDate = DateTime.now();
+      int age = currentDate.year - birthDate.year;
+      int month1 = currentDate.month;
+      int month2 = birthDate.month;
+      if (month2 > month1) {
+        age--;
+      } else if (month1 == month2) {
+        int day1 = currentDate.day;
+        int day2 = birthDate.day;
+        if (day2 > day1) {
+          age--;
+        }
+      }
+      return age.toString();
+    }
+
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 36, 98, 38),
-        title: const Center(
-          child: Text('Perfil'),
-        ),
-      ),
-      body: SingleChildScrollView(child: FutureBuilder(
+      body: SingleChildScrollView(
+          child: FutureBuilder(
         future: controller.getUserData(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
@@ -26,10 +39,13 @@ class ProfileScreen extends StatelessWidget {
                 Container(
                   //La caja verde donde esta la imagen de perfil y el nombre
                   height: 350,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     gradient: LinearGradient(
                       //gradiente
-                      colors: [Colors.green, Colors.green.shade300],
+                      colors: [
+                        MyColors.primary,
+                        Color.fromARGB(255, 25, 115, 116)
+                      ],
                       begin: Alignment.centerLeft,
                       end: Alignment.centerRight,
                       stops: [0.3, 0.8],
@@ -39,42 +55,50 @@ class ProfileScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Row(
-                        //Este Row es mas que todo para posicionar la foto perfil en el centro, pero imagino que se podria hacer de otra forma
+                      const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: <Widget>[
                           CircleAvatar(
-                            backgroundColor: Colors.white70,
+                            backgroundColor: MyColors.secondary,
                             minRadius: 60.0,
                             child: CircleAvatar(
                               radius: 50.0,
                               backgroundImage: NetworkImage(
-                                  'https://avatars0.githubusercontent.com/u/28812093?s=460&u=06471c90e03cfd8ce2855d217d157c93060da490&v=4'),
+                                  'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'),
                             ),
                           ),
                         ],
                       ),
-                      SizedBox(
-                          height:
-                              10), //esto es para que todo no quede tan pegado
+                      const SizedBox(height: 10),
                       Text(
-                        userData.name!,
-                        style: TextStyle(
+                        '${userData.name!} ${userData.lastName!}',
+                        style: const TextStyle(
                           fontSize: 35,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: MyColors.white,
                         ),
                         textAlign: TextAlign.center,
                       ),
+                      const SizedBox(height: 20),
                       Text(
-                        'Nombre de empresa/local/negocio',
-                        style: TextStyle(
-                          color: Colors.white,
+                        '${calculateAge(userData.birthday!)} años',
+                        style: const TextStyle(
                           fontSize: 25,
+                          fontWeight: FontWeight.normal,
+                          color: MyColors.white,
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 30),
+                      Text(
+                        'Ultima conexion: ${userData.lastConnection!.day.toString()} / ${userData.lastConnection!.month.toString()} / ${userData.lastConnection!.year.toString()}',
+                        style: const TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.normal,
+                          color: MyColors.white,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
                     ],
                   ),
                 ),
@@ -85,7 +109,7 @@ class ProfileScreen extends StatelessWidget {
                       const Text(
                         'Informacion de contacto:',
                         style: TextStyle(
-                            color: Colors.black87,
+                            color: Colors.black,
                             fontSize: 30,
                             fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
@@ -143,73 +167,7 @@ class ProfileScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 30),
-                      const Text(
-                        'Servicios ofrecidos',
-                        style: TextStyle(
-                            color: Colors.black87,
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 20),
-                      const ListTile(
-                        title: Text(
-                          'Revision a domicilio',
-                          style: TextStyle(
-                            color: Colors.green,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        subtitle: Text(
-                          'Inspección de automóviles para determinar daños o fallas y estimar los costos de reparación',
-                          style: TextStyle(
-                            fontSize: 18,
-                          ),
-                        ),
-                      ),
-                      Divider(),
-                      const ListTile(
-                        title: Text(
-                          'Mantenimiento preventivo',
-                          style: TextStyle(
-                            color: Colors.green,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        subtitle: Text(
-                          'Revisión de los  automóviles para asegurarse que estén en perfectas condiciones',
-                          style: TextStyle(
-                            fontSize: 18,
-                          ),
-                        ),
-                      ),
-                      Divider(),
-                      const ListTile(
-                        title: Text(
-                          'Venta de repuestos y reparaciones varias',
-                          style: TextStyle(
-                            color: Colors.green,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        subtitle: Text(
-                          'Desembolladura, pintura, repuestos, aceites, etc',
-                          style: TextStyle(
-                            fontSize: 18,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 30),
-                      const Text('Imagenes relevantes',
-                          style: TextStyle(
-                              color: Colors.black87,
-                              fontSize: 30,
-                              fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 80),
                     ],
                   ),
                 )
@@ -217,7 +175,7 @@ class ProfileScreen extends StatelessWidget {
             } else if (snapshot.hasError) {
               return Center(child: Text(snapshot.error.toString()));
             } else {
-              return const Center(child: Text('Algo salio mal #10'));
+              return const Center(child: Text('Algo salio mal'));
             }
           } else {
             return const Center(
