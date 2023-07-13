@@ -13,43 +13,55 @@ class AppUser {
   final List<String>? interests;
   final bool? onboarding;
 
-  AppUser({
-    required this.uid,
-    this.name,
-    this.lastName,
-    this.phoneNumber,
-    this.address,
-    this.birthday,
-    this.lastConnection,
-    this.interests,
-    this.onboarding
-  });
+  AppUser(
+      {required this.uid,
+      this.name,
+      this.lastName,
+      this.phoneNumber,
+      this.address,
+      this.birthday,
+      this.lastConnection,
+      this.interests,
+      this.onboarding});
 
   factory AppUser.fromFirebase(User user) {
     return AppUser(
-      uid: user.uid,
-      name: user.displayName,
-      lastName: user.displayName,
-      phoneNumber: '',
-      address: '',
-      birthday: null,
-      lastConnection: null,
-      interests: [],
-      onboarding: false
-    );
+        uid: user.uid,
+        name: user.displayName,
+        lastName: user.displayName,
+        phoneNumber: '',
+        address: '',
+        birthday: null,
+        lastConnection: null,
+        interests: [],
+        onboarding: false);
   }
 
   factory AppUser.fromJson(Map<String, dynamic> json) {
     return AppUser(
-      uid: FirebaseAuth.instance.currentUser!.uid,
-      name: json['name'],
-      lastName: json['lastName'],
-      phoneNumber: json['phoneNumber'],
-      address: json['address'],
-      birthday: (json['birthday'] as Timestamp).toDate(),
-      lastConnection: (json['lastConnection'] as Timestamp).toDate(),
-      interests: List<String>.from(json['interests']),
-      onboarding: json['onboarding']
-    );
+        uid: FirebaseAuth.instance.currentUser!.uid,
+        name: json['name'],
+        lastName: json['lastName'],
+        phoneNumber: json['phoneNumber'],
+        address: json['address'],
+        birthday: (json['birthday'] as Timestamp).toDate(),
+        lastConnection: (json['lastConnection'] as Timestamp).toDate(),
+        interests: List<String>.from(json['interests']),
+        onboarding: json['onboarding']);
+  }
+
+  factory AppUser.fromSnapshot( //map user tomado de firebase a AppUser
+      DocumentSnapshot<Map<String, dynamic>> document) {
+    final data = document.data()!;
+    return AppUser(
+        uid: document.id,
+        name: data["name"],
+        lastName: data["lastName"],
+        phoneNumber: data["phoneNumber"],
+        address: data["address"],
+        birthday: (data['birthday'] as Timestamp).toDate(),
+        lastConnection: (data['lastConnection'] as Timestamp).toDate(),
+        interests: List<String>.from(data['interests'])
+        );
   }
 }
