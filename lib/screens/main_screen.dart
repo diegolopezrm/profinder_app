@@ -11,6 +11,8 @@ import 'package:profinder_app/widgets/upload_data.dart';
 import '../controller/auth_controller.dart';
 import '../routes/app_routes.dart';
 
+import '../widgets/profile.dart';
+
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
@@ -71,7 +73,7 @@ class _MainScreenState extends State<MainScreen> {
       const Placeholder(),
       const Placeholder(),
       const Placeholder(),
-      const MyWidget()
+      ProfileScreen(),
     ];
   }
 
@@ -98,8 +100,10 @@ class _MainScreenState extends State<MainScreen> {
               Icon(Icons.search, size: 30, color: MyColors.primary),
               Icon(Icons.book, size: 30, color: MyColors.primary),
               Icon(Icons.people, size: 30, color: MyColors.primary),
-              Icon(Icons.emoji_events, size: 30, color: MyColors.primary),
-            ],
+              Icon(Icons.person,
+                  size: 30, color: MyColors.primary),
+             ],
+
             onTap: (index) {
               setState(() {
                 _page = index;
