@@ -1,11 +1,47 @@
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:profinder_app/controller/profile_controller.dart';
 import 'package:profinder_app/models/app_user.dart';
 import 'package:profinder_app/utils/my_colors.dart';
+import 'dart:io';
+import 'dart:math';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({ Key? key}) : super(key: key);
+  
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  
+  String generateRandomString(int len) {
+  var r = Random();
+  return String.fromCharCodes(List.generate(len, (index) => r.nextInt(33) + 89));
+}
+
+  void pickUploadImage() async {
+      final image = await ImagePicker().pickImage(
+        source: ImageSource.gallery,
+        maxHeight: 512,
+        maxWidth: 512,
+        imageQuality: 75, 
+      );
+
+      Reference ref = FirebaseStorage.instance.ref().child('${generateRandomString(15)}.jpg');
+
+      await ref.putFile(File(image!.path));
+      ref.getDownloadURL().then((value) {
+        setState(() {
+          FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).update({'profilepic': value});
+        });
+      });
+  }
+  
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(ProfileController());
@@ -55,18 +91,22 @@ class ProfileScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      const Row(
+                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: <Widget>[
-                          CircleAvatar(
+                          GestureDetector(
+                            onTap: () {
+                              pickUploadImage();
+                            },
+                            child: CircleAvatar(
                             backgroundColor: MyColors.secondary,
                             minRadius: 60.0,
                             child: CircleAvatar(
                               radius: 50.0,
-                              backgroundImage: NetworkImage(
-                                  'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'),
+                              backgroundImage: userData.profilepic == ' ' ? const NetworkImage('https://cdn.pixabay.com/photo/2017/11/10/05/48/user-2935527_1280.png') : NetworkImage(userData.profilepic!),
                             ),
                           ),
+                          )
                         ],
                       ),
                       const SizedBox(height: 10),
@@ -81,17 +121,7 @@ class ProfileScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 20),
                       Text(
-                        '${calculateAge(userData.birthday!)} años',
-                        style: const TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.normal,
-                          color: MyColors.white,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 30),
-                      Text(
-                        'Ultima conexion: ${userData.lastConnection!.day.toString()} / ${userData.lastConnection!.month.toString()} / ${userData.lastConnection!.year.toString()}',
+                        'Ultima conexion: ${userData.lastConnection!.day.toString()}/${userData.lastConnection!.month.toString()}/${userData.lastConnection!.year.toString()}',
                         style: const TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.normal,
@@ -107,7 +137,7 @@ class ProfileScreen extends StatelessWidget {
                     children: <Widget>[
                       const SizedBox(height: 30),
                       const Text(
-                        'Informacion de contacto:',
+                        'Informacion personal:',
                         style: TextStyle(
                             color: Colors.black,
                             fontSize: 30,
@@ -117,6 +147,23 @@ class ProfileScreen extends StatelessWidget {
                       const SizedBox(
                         height: 20,
                       ),
+                      ListTile(
+                        title: const Text(
+                          'Edad',
+                          style: TextStyle(
+                            color: Colors.green,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        subtitle: Text(
+                          '${calculateAge(userData.birthday!)} años',
+                          style: const TextStyle(
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
+                      const Divider(),
                       ListTile(
                         title: const Text(
                           'Correo',

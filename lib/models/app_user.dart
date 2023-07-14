@@ -12,6 +12,7 @@ class AppUser {
   final DateTime? lastConnection;
   final List<String>? interests;
   final bool? onboarding;
+  final String? profilepic;
 
   AppUser(
       {required this.uid,
@@ -22,7 +23,8 @@ class AppUser {
       this.birthday,
       this.lastConnection,
       this.interests,
-      this.onboarding});
+      this.onboarding,
+      this.profilepic});
 
   factory AppUser.fromFirebase(User user) {
     return AppUser(
@@ -34,7 +36,8 @@ class AppUser {
         birthday: null,
         lastConnection: null,
         interests: [],
-        onboarding: false);
+        onboarding: false,
+        profilepic: ' ');
   }
 
   factory AppUser.fromJson(Map<String, dynamic> json) {
@@ -47,7 +50,8 @@ class AppUser {
         birthday: (json['birthday'] as Timestamp).toDate(),
         lastConnection: (json['lastConnection'] as Timestamp).toDate(),
         interests: List<String>.from(json['interests']),
-        onboarding: json['onboarding']);
+        onboarding: json['onboarding'],
+        profilepic: json['profilepic']);
   }
 
   factory AppUser.fromSnapshot( //map user tomado de firebase a AppUser
@@ -61,7 +65,8 @@ class AppUser {
         address: data["address"],
         birthday: (data['birthday'] as Timestamp).toDate(),
         lastConnection: (data['lastConnection'] as Timestamp).toDate(),
-        interests: List<String>.from(data['interests'])
+        interests: List<String>.from(data['interests']),
+        profilepic: data['profilepic']
         );
   }
 }

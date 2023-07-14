@@ -102,7 +102,7 @@ class _MainScreenState extends State<MainScreen> {
               Icon(Icons.book,
                   size: 30, color: MyColors.primary),
               Icon(Icons.people, size: 30, color: MyColors.primary),
-              Icon(Icons.account_circle,
+              Icon(Icons.person,
                   size: 30, color: MyColors.primary),
              ],
             onTap: (index) {
