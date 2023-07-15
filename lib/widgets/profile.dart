@@ -7,41 +7,48 @@ import 'package:image_picker/image_picker.dart';
 import 'package:profinder_app/controller/profile_controller.dart';
 import 'package:profinder_app/models/app_user.dart';
 import 'package:profinder_app/utils/my_colors.dart';
+import 'update_Profile.dart';
 import 'dart:io';
 import 'dart:math';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({ Key? key}) : super(key: key);
-  
+  const ProfileScreen({Key? key}) : super(key: key);
+
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  
+  late AppUser datos;
+
   String generateRandomString(int len) {
-  var r = Random();
-  return String.fromCharCodes(List.generate(len, (index) => r.nextInt(33) + 89));
-}
+    var r = Random();
+    return String.fromCharCodes(
+        List.generate(len, (index) => r.nextInt(33) + 89));
+  }
 
   void pickUploadImage() async {
-      final image = await ImagePicker().pickImage(
-        source: ImageSource.gallery,
-        maxHeight: 512,
-        maxWidth: 512,
-        imageQuality: 75, 
-      );
+    final image = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+      maxHeight: 512,
+      maxWidth: 512,
+      imageQuality: 75,
+    );
 
-      Reference ref = FirebaseStorage.instance.ref().child('${generateRandomString(15)}.jpg');
+    Reference ref =
+        FirebaseStorage.instance.ref().child('${generateRandomString(15)}.jpg');
 
-      await ref.putFile(File(image!.path));
-      ref.getDownloadURL().then((value) {
-        setState(() {
-          FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).update({'profilepic': value});
-        });
+    await ref.putFile(File(image!.path));
+    ref.getDownloadURL().then((value) {
+      setState(() {
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .update({'profilepic': value});
       });
+    });
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(ProfileController());
@@ -64,6 +71,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      backgroundColor: MyColors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(
+              Icons.edit,
+              color: Colors.white,
+            ),
+            onPressed: () async {
+              final bool? somethingChanged =
+                  await Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => ProfileConfig(
+                            user: datos,
+                          )));
+              if (somethingChanged == true) {
+                setState(() {});
+              }
+            },
+          )
+        ],
+      ),
       body: SingleChildScrollView(
           child: FutureBuilder(
         future: controller.getUserData(),
@@ -71,13 +102,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasData) {
               AppUser userData = snapshot.data as AppUser;
+              datos = userData;
               return Column(children: [
                 Container(
-                  //La caja verde donde esta la imagen de perfil y el nombre
                   height: 350,
                   decoration: const BoxDecoration(
                     gradient: LinearGradient(
-                      //gradiente
                       colors: [
                         MyColors.primary,
                         Color.fromARGB(255, 25, 115, 116)
@@ -91,25 +121,55 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                       Row(
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: <Widget>[
                           GestureDetector(
                             onTap: () {
                               pickUploadImage();
                             },
-                            child: CircleAvatar(
-                            backgroundColor: MyColors.secondary,
-                            minRadius: 60.0,
-                            child: CircleAvatar(
-                              radius: 50.0,
-                              backgroundImage: userData.profilepic == ' ' ? const NetworkImage('https://cdn.pixabay.com/photo/2017/11/10/05/48/user-2935527_1280.png') : NetworkImage(userData.profilepic!),
+                            child: Stack(
+                              children: [
+                                CircleAvatar(
+                                  backgroundColor: MyColors.secondary,
+                                  minRadius: 60.0,
+                                  child: CircleAvatar(
+                                    radius: 50.0,
+                                    backgroundImage: userData.profilepic == ' '
+                                        ? const NetworkImage(
+                                            'https://cdn.pixabay.com/photo/2017/11/10/05/48/user-2935527_1280.png')
+                                        : NetworkImage(userData.profilepic!),
+                                  ),
+                                ),
+                                Positioned(
+                                  bottom: 0,
+                                  right: 0,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        pickUploadImage();
+                                      });
+                                    },
+                                    child: buildCircle(
+                                      color: MyColors.secondary,
+                                      all: 4,
+                                      child: buildCircle(
+                                        color: MyColors.primary,
+                                        all: 8,
+                                        child: const Icon(
+                                          Icons.camera_alt,
+                                          color: MyColors.secondary,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          )
                         ],
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 15),
                       Text(
                         '${userData.name!} ${userData.lastName!}',
                         style: const TextStyle(
@@ -226,7 +286,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
             }
           } else {
             return const Center(
-              child: CircularProgressIndicator(),
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(),
+                  ]),
             );
           }
         },
@@ -234,3 +299,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 }
+
+Widget buildCircle({
+  required Widget child,
+  required double all,
+  required Color color,
+}) =>
+    ClipOval(
+      child: Container(
+        padding: EdgeInsets.all(all),
+        color: color,
+        child: child,
+      ),
+    );
