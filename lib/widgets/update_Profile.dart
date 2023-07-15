@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:profinder_app/models/app_user.dart';
 import 'package:profinder_app/utils/my_colors.dart';
 
-
 class ProfileConfig extends StatefulWidget {
   final AppUser user;
   const ProfileConfig({Key? key, required this.user}) : super(key: key);
@@ -15,6 +14,21 @@ class ProfileConfig extends StatefulWidget {
 }
 
 class _ProfileConfigState extends State<ProfileConfig> {
+  late DateTime selectedDate = widget.user.birthday!;
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(1900, 1, 1),
+        lastDate: DateTime.now());
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
@@ -191,6 +205,47 @@ class _ProfileConfigState extends State<ProfileConfig> {
                       },
                     ),
                     const SizedBox(height: 40),
+                    Row(
+                      children: [
+                        TextButton(
+                          onPressed: () => _selectDate(context),
+                          style: ButtonStyle(
+                            elevation: MaterialStateProperty.all(3),
+                            backgroundColor: const MaterialStatePropertyAll(
+                                MyColors.secondary),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5.0),
+                                side: const BorderSide(
+                                  color: MyColors.primary,
+                                ),
+                              ),
+                            ),
+                          ),
+                          child: const SizedBox(
+                            width: 150,
+                            child: Text(
+                              'Selecciona tu echa de nacimiento:',
+                              style: TextStyle(
+                                color: MyColors.primary,
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          '${selectedDate.day}/${selectedDate.month}/${selectedDate.year}',
+                          style: const TextStyle(
+                            color: MyColors.primary,
+                            fontSize: 20
+                          ),
+                        )
+                      ],
+                    ),
+                    const SizedBox(height: 40),
                   ],
                 ),
               ),
@@ -252,13 +307,14 @@ class _ProfileConfigState extends State<ProfileConfig> {
                         'lastName': lastNameController.text,
                         'phoneNumber': phoneNumberController.text,
                         'address': addressController.text,
+                        'birthday': selectedDate,
                       }).then((value) {
                         navigator!.pop(true);
                       });
                     }
                   },
                   child: const Text(
-                    'ACEPTAR',
+                    'GUARDAR',
                     style: TextStyle(
                       color: MyColors.secondary,
                       fontSize: 20,
@@ -268,7 +324,7 @@ class _ProfileConfigState extends State<ProfileConfig> {
                 ),
               ],
             ),
-            const SizedBox(height: 10)
+            const SizedBox(height: 20)
           ],
         ),
       ),

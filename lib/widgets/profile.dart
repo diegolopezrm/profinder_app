@@ -7,7 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:profinder_app/controller/profile_controller.dart';
 import 'package:profinder_app/models/app_user.dart';
 import 'package:profinder_app/utils/my_colors.dart';
-import 'update_Profile.dart';
+import 'update_profile.dart';
 import 'dart:io';
 import 'dart:math';
 
