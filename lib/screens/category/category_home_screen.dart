@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
 import '../../models/category.dart';
 
 class CategoryHomeScreen extends StatefulWidget {
@@ -97,31 +98,39 @@ class _CategoryHomeScreenState extends State<CategoryHomeScreen> {
                       var category = categories[index];
                       var icon = category.getIcon();
                       var name = category.name;
-                      return Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                              15.0), // Agrega borde redondeado
-                        ),
-                        elevation: 5, // Agrega sombra
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              icon,
-                              const SizedBox(height: 8.0),
-                              Text(
-                                name,
-                                textAlign: TextAlign.center,
-                                //if text is too long, it will be replaced with ellipsis. only two lines
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 2,
-                                style: const TextStyle(
-                                  fontSize: 12.0,
-                                  fontWeight: FontWeight.bold,
+                      return InkWell(
+                        onTap:
+                            //go to category slection screen
+                            () {
+                          Get.toNamed('/category-selection',
+                              arguments: category);
+                        },
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                                15.0), // Agrega borde redondeado
+                          ),
+                          elevation: 5, // Agrega sombra
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                icon,
+                                const SizedBox(height: 8.0),
+                                Text(
+                                  name,
+                                  textAlign: TextAlign.center,
+                                  //if text is too long, it will be replaced with ellipsis. only two lines
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                  style: const TextStyle(
+                                    fontSize: 12.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       );
