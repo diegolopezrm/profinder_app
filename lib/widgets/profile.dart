@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:profinder_app/controller/profile_controller.dart';
 import 'package:profinder_app/models/app_user.dart';
 import 'package:profinder_app/utils/my_colors.dart';
+import '../controller/auth_controller.dart';
 import 'update_profile.dart';
 import 'dart:io';
 import 'dart:math';
@@ -20,6 +21,8 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   late AppUser datos;
+
+  final authController = Get.find<AuthController>();
 
   String generateRandomString(int len) {
     var r = Random();
@@ -277,7 +280,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       const SizedBox(height: 80),
                     ],
                   ),
-                )
+                ),
+                //button to close session
+                Container(
+                  width: 300,
+                  height: 50,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: MyColors.primary,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                    ),
+                    onPressed: () async {
+                      authController.signOut();
+                      Get.offAllNamed('/auth-login');
+                    },
+                    child: const Text(
+                      'Cerrar sesion',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 70),
               ]);
             } else if (snapshot.hasError) {
               return Center(child: Text(snapshot.error.toString()));
@@ -285,12 +315,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
               return const Center(child: Text('Algo salio mal'));
             }
           } else {
-            return const Center(
+            return Center(
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    CircularProgressIndicator(),
+                    const CircularProgressIndicator(),
                   ]),
             );
           }

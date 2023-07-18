@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
@@ -7,8 +6,6 @@ import 'package:metaballs/metaballs.dart';
 import 'package:profinder_app/utils/my_colors.dart';
 
 import '../controller/auth_controller.dart';
-
-
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -19,7 +16,6 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final AuthController _authController = Get.put(AuthController());
-
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 300,
                 //logo app image png asset
 
-                child : Image(
+                child: Image(
                   image: AssetImage('assets/images/logo.png'),
                   fit: BoxFit.scaleDown,
                 ),
@@ -91,9 +87,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     Buttons.Google,
                     onPressed: () {
                       _authController.signInWithGoogle().then((value) {
-
                         setState(() {});
-                        Get.snackbar('Google', 'Google Login Success');
+                        Get.snackbar(
+                          'Bienvenido',
+                          'Has iniciado sesión correctamente',
+                          backgroundColor: MyColors.secondary,
+                          colorText: MyColors.primary,
+                        );
                       });
                     },
                   ),
