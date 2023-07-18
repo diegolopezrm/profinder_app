@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
+import '../../controller/auth_controller.dart';
 import '../../models/category.dart';
+import '../../utils/my_colors.dart';
 
 class CategoryHomeScreen extends StatefulWidget {
   const CategoryHomeScreen({super.key});
@@ -11,6 +13,9 @@ class CategoryHomeScreen extends StatefulWidget {
 }
 
 class _CategoryHomeScreenState extends State<CategoryHomeScreen> {
+  //get user id
+  final authController = Get.find<AuthController>();
+
   late Future<List<Category>> _categoriesFuture;
   String _searchText = '';
 
@@ -52,16 +57,42 @@ class _CategoryHomeScreenState extends State<CategoryHomeScreen> {
         } else {
           var categories = _filterCategories(snapshot.data!);
           return Padding(
-            padding: const EdgeInsets.only(top: 40.0),
+            padding: const EdgeInsets.only(top: 70.0),
             child: Column(
               children: [
                 Padding(
                   padding: const EdgeInsets.all(10.0),
-                  child: TextField(
-                    style: const TextStyle(
-                      color: Colors
-                          .black, // cambiar a un color que sea visible en tu tema
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Hola ${authController.user!.name}!',
+                          style: const TextStyle(
+                              color: MyColors.lightGreen,
+                              fontSize: 18,
+                              fontWeight: FontWeight.normal),
+                          textAlign: TextAlign.start,
+                        ),
+                        const SizedBox(height: 10),
+                        const Text(
+                          '¿Qué servicio necesitas?',
+                          style: TextStyle(
+                              color: MyColors.secondary,
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.start,
+                        ),
+                      ],
                     ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: TextField(
+                    style: const TextStyle(color: Colors.white),
                     onChanged: (value) {
                       print(value);
                       setState(() {
@@ -69,23 +100,32 @@ class _CategoryHomeScreenState extends State<CategoryHomeScreen> {
                       });
                     },
                     decoration: const InputDecoration(
-                      labelText: 'Buscar',
-                      border: OutlineInputBorder(),
+                      labelText: 'Buscar servicio por nombre o palabra clave',
+                      labelStyle: TextStyle(color: MyColors.lightGreen, fontSize: 15),
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide(color: MyColors.lightGreen),
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(10.0))),
                       // change color of text when user types
                       focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue),
-                      ),
+                          borderSide: BorderSide(color: MyColors.lightGreen),
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(10.0))),
                       // change color of text when user types
                       enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      prefixIcon: Icon(Icons.search),
+                          borderSide: BorderSide(color: MyColors.lightGreen),
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(10.0))),
+                      prefixIcon:
+                          Icon(Icons.search, color: MyColors.lightGreen),
                     ),
                   ),
                 ),
+                const SizedBox(height: 10),
                 Expanded(
                   child: GridView.builder(
-                    padding: const EdgeInsets.all(10.0),
+                    padding: const EdgeInsets.only(
+                        left: 10.0, right: 10.0, bottom: 100.0),
                     itemCount: categories.length,
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
@@ -127,6 +167,7 @@ class _CategoryHomeScreenState extends State<CategoryHomeScreen> {
                                   style: const TextStyle(
                                     fontSize: 12.0,
                                     fontWeight: FontWeight.bold,
+                                    color: MyColors.primary,
                                   ),
                                 ),
                               ],

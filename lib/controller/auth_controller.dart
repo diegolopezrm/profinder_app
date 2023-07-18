@@ -7,6 +7,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 import '../models/app_user.dart';
 import '../routes/app_routes.dart';
+import '../utils/my_colors.dart';
 
 class AuthController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -55,12 +56,12 @@ class AuthController extends GetxController {
       Get.snackbar(
         'Error',
         'Failed to sign in with Google: $e',
-        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: MyColors.secondary,
+        colorText: MyColors.primary,
       );
       return null;
     }
   }
-
 
   void signOut() {
     _auth.signOut().then((value) => Get.offAllNamed(AppRoutes.authLogin));

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:profinder_app/screens/category/category_home_screen.dart';
+import 'package:profinder_app/screens/profile_prestador/profile_prestador_config_screen.dart';
 import 'package:profinder_app/utils/my_colors.dart';
 import 'package:profinder_app/widgets/upload_data.dart';
 
@@ -68,15 +69,61 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
-  List<Widget> _buildScreens() {
+  List<Widget> _buildScreensCliente() {
+    return [
+      const CategoryHomeScreen(),
+      const Placeholder(),
+      const ProfileScreen(),
+      const SettingsScreen(),
+    ];
+  }
+
+  List<Widget> _buildScreensPrestador() {
     return [
       const CategoryHomeScreen(),
       const Placeholder(),
       const Placeholder(),
+      const ProfilePrestadorConfigScreen(),
       const ProfileScreen(),
       const SettingsScreen(),
-      
+
     ];
+  }
+
+  List<Widget> _buildScreens() {
+    if (data!['role'] == 'cliente') {
+      return _buildScreensCliente();
+    } else {
+      return _buildScreensPrestador();
+    }
+  }
+
+  List<Widget> _buildIconsCliente() {
+    return [
+      const Icon(Icons.home, size: 30, color: MyColors.primary),
+      const Icon(Icons.history, size: 30, color: MyColors.primary),
+      const Icon(Icons.person, size: 30, color: MyColors.primary),
+      const Icon(Icons.settings, size: 30, color: MyColors.primary),
+    ];
+  }
+
+  List<Widget> _buildIconsPrestador() {
+    return [
+      const Icon(Icons.home, size: 30, color: MyColors.primary),
+      const Icon(Icons.history, size: 30, color: MyColors.primary),
+      const Icon(Icons.work, size: 30, color: MyColors.primary),
+      const Icon(Icons.build, size: 30, color: MyColors.primary),
+      const Icon(Icons.person, size: 30, color: MyColors.primary),
+      const Icon(Icons.settings, size: 30, color: MyColors.primary),
+    ];
+  }
+
+  List<Widget> _buildIcons() {
+    if (data!['role'] == 'cliente') {
+      return _buildIconsCliente();
+    } else {
+      return _buildIconsPrestador();
+    }
   }
 
   @override
@@ -97,14 +144,7 @@ class _MainScreenState extends State<MainScreen> {
           child: CurvedNavigationBar(
             backgroundColor: Colors.transparent,
             color: MyColors.secondary,
-            items: const <Widget>[
-              Icon(Icons.home, size: 30, color: MyColors.primary),
-              Icon(Icons.search, size: 30, color: MyColors.primary),
-              Icon(Icons.book, size: 30, color: MyColors.primary),
-              Icon(Icons.person, size: 30, color: MyColors.primary),
-              Icon(Icons.settings, size: 30, color: MyColors.primary),              
-             ],
-
+            items: _buildIcons(),
             onTap: (index) {
               setState(() {
                 _page = index;

@@ -2,6 +2,7 @@
 //{'name': 'Cocina', 'icon': 'kitchen'},
 
 import 'package:flutter/material.dart';
+import 'package:profinder_app/utils/my_colors.dart';
 
 class Category {
   final String name;
@@ -55,6 +56,6 @@ class Category {
       };
 
   Icon getIcon() {
-    return Icon(iconMapping[icon]);
+    return Icon(iconMapping[icon], color: MyColors.primary.withOpacity(0.5), size: 40);
   }
 }

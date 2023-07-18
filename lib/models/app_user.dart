@@ -13,6 +13,8 @@ class AppUser {
   final List<String>? interests;
   final bool? onboarding;
   final String? profilepic;
+  final String? role;
+  final Map<String, dynamic>? service;
 
   AppUser(
       {required this.uid,
@@ -24,7 +26,9 @@ class AppUser {
       this.lastConnection,
       this.interests,
       this.onboarding,
-      this.profilepic});
+      this.profilepic,
+      this.role,
+      this.service});
 
   factory AppUser.fromFirebase(User user) {
     return AppUser(
@@ -37,7 +41,9 @@ class AppUser {
         lastConnection: null,
         interests: [],
         onboarding: false,
-        profilepic: ' ');
+        profilepic: ' ',
+        role: ' ',
+        service: {});
   }
 
   factory AppUser.fromJson(Map<String, dynamic> json) {
@@ -51,10 +57,13 @@ class AppUser {
         lastConnection: (json['lastConnection'] as Timestamp).toDate(),
         interests: List<String>.from(json['interests']),
         onboarding: json['onboarding'],
-        profilepic: json['profilepic']);
+        profilepic: json['profilepic'],
+        role: json['role'],
+        service: json['service']);
   }
 
-  factory AppUser.fromSnapshot( //map user tomado de firebase a AppUser
+  factory AppUser.fromSnapshot(
+      //map user tomado de firebase a AppUser
       DocumentSnapshot<Map<String, dynamic>> document) {
     final data = document.data()!;
     return AppUser(
@@ -66,7 +75,8 @@ class AppUser {
         birthday: (data['birthday'] as Timestamp).toDate(),
         lastConnection: (data['lastConnection'] as Timestamp).toDate(),
         interests: List<String>.from(data['interests']),
-        profilepic: data['profilepic']
-        );
+        profilepic: data['profilepic'],
+        role: data['role'],
+        service: data['service']);
   }
 }
