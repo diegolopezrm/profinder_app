@@ -1,7 +1,11 @@
+import 'dart:io';
+
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:profinder_app/controller/auth_controller.dart';
 import 'package:profinder_app/models/app_user.dart';
 import 'package:profinder_app/utils/my_colors.dart';
@@ -21,6 +25,12 @@ class _ProfilePrestadorConfigScreenState
   final List<TextEditingController> categoryControllers =
       List.generate(5, (index) => TextEditingController());
   final TextEditingController descriptionController = TextEditingController();
+  // Agrega una nueva propiedad para las imágenes seleccionadas
+  List<XFile>? images;
+  List<String> imageUrls = [];
+
+// Utiliza un ImagePicker para permitir al usuario seleccionar imágenes
+  final ImagePicker _picker = ImagePicker();
 
   String? mainCategory;
   Future<DocumentSnapshot<Map<String, dynamic>>>? futureUser;
@@ -34,19 +44,53 @@ class _ProfilePrestadorConfigScreenState
         .get();
   }
 
+  Future<void> selectImages() async {
+    try {
+      images = await _picker.pickMultiImage();
+    } catch (e) {
+      print(e);
+    }
+    if (images != null) {
+      for (var image in images!) {
+        if (image.path != null) {
+          File file = File(image.path);
+          var snapshot = await FirebaseStorage.instance
+              .ref()
+              .child(
+                  'users/${FirebaseAuth.instance.currentUser!.uid}/images/${image.name}')
+              .putFile(file);
+          String downloadUrl = await snapshot.ref.getDownloadURL();
+          imageUrls.add(downloadUrl);
+          setState(() {
+            imageUrls = imageUrls;
+          });
+        } else {
+          print('Error: la ruta de la imagen es nula');
+        }
+      }
+    } else {
+      print('Error: no se seleccionaron imágenes');
+    }
+  }
+
+  Future<Image> _loadImage(String url) async {
+    return Image.network(url, fit: BoxFit.fill);
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
         future: futureUser,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
+            return const CircularProgressIndicator();
           }
 
           var userData = snapshot.data!;
           var serviceData = userData['service'];
           descriptionController.text = serviceData['description'];
           mainCategory = userData['mainService'];
+          imageUrls = serviceData['images'].cast<String>();
 
           for (var i = 0; i < categoryControllers.length; i++) {
             categoryControllers[i].text = serviceData['categories'][i];
@@ -182,6 +226,68 @@ class _ProfilePrestadorConfigScreenState
                           );
                         },
                       ),
+                      //boton para seleccionar imagenes
+                      const SizedBox(height: 20),
+                      ElevatedButton(
+                        style: ButtonStyle(
+                          elevation: MaterialStateProperty.all(5),
+                          backgroundColor: const MaterialStatePropertyAll(
+                              MyColors.secondary),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                              side: const BorderSide(
+                                color: MyColors.primary,
+                              ),
+                            ),
+                          ),
+                          fixedSize: MaterialStateProperty.all(
+                            const Size(300, 50),
+                          ),
+                        ),
+                        onPressed: () {
+                          selectImages();
+                        },
+                        child: const Text(
+                          'Seleccionar Imágenes',
+                          style: TextStyle(
+                            color: MyColors.primary,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
+                      imageUrls.isEmpty
+                          ? const SizedBox(height: 0)
+                          : GridView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: imageUrls.length,
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3,
+                                crossAxisSpacing: 4.0,
+                                mainAxisSpacing: 4.0,
+                              ),
+                              itemBuilder: (context, index) {
+                                return FutureBuilder(
+                                  future: _loadImage(imageUrls[index]),
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot<Image> image) {
+                                    if (image.connectionState ==
+                                        ConnectionState.done) {
+                                      return image.data!;
+                                    } else if (image.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return const CircularProgressIndicator();
+                                    } else {
+                                      return const Icon(Icons.error);
+                                    }
+                                  },
+                                );
+                              },
+                            ),
+
                       const SizedBox(height: 40),
                       TextButton(
                         style: ButtonStyle(
@@ -212,6 +318,7 @@ class _ProfilePrestadorConfigScreenState
                                     .map((controller) => controller.text)
                                     .toList(),
                                 'description': descriptionController.text,
+                                'images': imageUrls,
                               },
                               'mainService': mainCategory,
                             }).then((value) {

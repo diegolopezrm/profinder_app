@@ -19,6 +19,16 @@
 	</array>
 	<!-- End of the Google Sign-In section -->
 
+	<!-- NSPhotoLibraryUsageDescription -->
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Used to demonstrate image picker plugin</string>
+	<!-- NSCameraUsageDescription -->
+	<key>NSCameraUsageDescription</key>
+	<string>Used to demonstrate image picker plugin</string>
+	<!-- NSMicrophoneUsageDescription -->
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Used to capture audio for image picker plugin</string>
+
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
