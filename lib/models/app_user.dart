@@ -15,6 +15,7 @@ class AppUser {
   final String? profilepic;
   final String? role;
   final Map<String, dynamic>? service;
+  final String? mainService;
 
   AppUser(
       {required this.uid,
@@ -28,22 +29,24 @@ class AppUser {
       this.onboarding,
       this.profilepic,
       this.role,
-      this.service});
+      this.service,
+      this.mainService});
 
   factory AppUser.fromFirebase(User user) {
     return AppUser(
         uid: user.uid,
         name: user.displayName,
         lastName: user.displayName,
-        phoneNumber: '',
-        address: '',
+        phoneNumber: null,
+        address: null,
         birthday: null,
         lastConnection: null,
-        interests: [],
+        interests: null,
         onboarding: false,
-        profilepic: ' ',
-        role: ' ',
-        service: {});
+        profilepic: null,
+        role: null,
+        service: null,
+        mainService: null);
   }
 
   factory AppUser.fromJson(Map<String, dynamic> json) {
@@ -59,7 +62,8 @@ class AppUser {
         onboarding: json['onboarding'],
         profilepic: json['profilepic'],
         role: json['role'],
-        service: json['service']);
+        service: json['service'],
+        mainService: json['mainService']);
   }
 
   factory AppUser.fromSnapshot(
@@ -77,6 +81,7 @@ class AppUser {
         interests: List<String>.from(data['interests']),
         profilepic: data['profilepic'],
         role: data['role'],
-        service: data['service']);
+        service: data['service'],
+        mainService: data['mainService']);
   }
 }

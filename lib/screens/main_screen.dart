@@ -4,9 +4,12 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:profinder_app/controller/tab_controller.dart';
+import 'package:profinder_app/models/app_user.dart';
 import 'package:profinder_app/screens/category/category_home_screen.dart';
 import 'package:profinder_app/screens/profile_prestador/profile_prestador_config_screen.dart';
 import 'package:profinder_app/utils/my_colors.dart';
+import 'package:profinder_app/widgets/coming_soon_widgtet.dart';
 import 'package:profinder_app/widgets/upload_data.dart';
 
 import '../controller/auth_controller.dart';
@@ -24,7 +27,8 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   final AuthController _authController = Get.find();
-  int _page = 0;
+  final TabControllerApp _tabController = Get.find();
+
   Map<String, dynamic>? data;
   bool _isLoading = true;
   int? soundId;
@@ -33,7 +37,6 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
     fetchData();
-
     setState(() {});
   }
 
@@ -62,6 +65,24 @@ class _MainScreenState extends State<MainScreen> {
         Get.offNamed(AppRoutes
             .onboarding); // Replace 'AppRoutes.onboarding' with your Onboarding screen route.
       });
+
+      final AppUser user = AppUser(
+        uid: _authController.user!.uid,
+        name: data!['name'],
+        lastName: data!['lastName'],
+        phoneNumber: data!['phoneNumber'],
+        address: data!['address'],
+        birthday: data!['birthday'],
+        role: data!['role'],
+        onboarding: data!['onboarding'],
+        mainService: data!['mainService'],
+        service: data!['service'],
+        profilepic: data!['profilepic'],
+      );
+
+      setState(() {
+        _authController.updateLocalUser(user);
+      });
     } else {
       setState(() {
         _isLoading = false;
@@ -72,7 +93,7 @@ class _MainScreenState extends State<MainScreen> {
   List<Widget> _buildScreensCliente() {
     return [
       const CategoryHomeScreen(),
-      const Placeholder(),
+      const ComingSoonScreen(),
       const ProfileScreen(),
       const SettingsScreen(),
     ];
@@ -81,20 +102,19 @@ class _MainScreenState extends State<MainScreen> {
   List<Widget> _buildScreensPrestador() {
     return [
       const CategoryHomeScreen(),
-      const Placeholder(),
-      const Placeholder(),
+      const ComingSoonScreen(),
+      const MyWidget(),
       const ProfilePrestadorConfigScreen(),
       const ProfileScreen(),
       const SettingsScreen(),
-
     ];
   }
 
   List<Widget> _buildScreens() {
-    if (data!['role'] == 'cliente') {
-      return _buildScreensCliente();
-    } else {
+    if (data!['role'] == 'prestador') {
       return _buildScreensPrestador();
+    } else {
+      return _buildScreensCliente();
     }
   }
 
@@ -119,10 +139,10 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   List<Widget> _buildIcons() {
-    if (data!['role'] == 'cliente') {
-      return _buildIconsCliente();
-    } else {
+    if (data!['role'] == 'prestador') {
       return _buildIconsPrestador();
+    } else {
+      return _buildIconsCliente();
     }
   }
 
@@ -137,7 +157,7 @@ class _MainScreenState extends State<MainScreen> {
       body: Stack(children: [
         AnimatedSwitcher(
           duration: const Duration(milliseconds: 300),
-          child: _buildScreens()[_page],
+          child: _buildScreens()[_tabController.page],
         ),
         Align(
           alignment: Alignment.bottomCenter,
@@ -147,7 +167,7 @@ class _MainScreenState extends State<MainScreen> {
             items: _buildIcons(),
             onTap: (index) {
               setState(() {
-                _page = index;
+                _tabController.setPage(index);
               });
             },
           ),

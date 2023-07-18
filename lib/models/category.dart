@@ -5,9 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:profinder_app/utils/my_colors.dart';
 
 class Category {
-  final String name;
-  final String icon;
-  final List keywords = [];
+  final String? id;
+  final String? name;
+  final String? icon;
+  final List? keywords = [];
 
   Map<String, IconData> iconMapping = {
     'kitchen': Icons.kitchen,
@@ -39,20 +40,21 @@ class Category {
     'translate': Icons.translate,
   };
 
-  Category({required this.name, required this.icon, List? keywords}) {
+  Category({required this.name, required this.icon, List? keywords, required this.id}) {
     if (keywords != null) {
-      this.keywords.addAll(keywords);
+      this.keywords!.addAll(keywords);
     }
   }
 
   factory Category.fromJson(Map<String, dynamic> json) {
-    return Category(name: json['name'], icon: json['icon'], keywords: json['keywords']);
+    return Category(name: json['name'], icon: json['icon'], keywords: json['keywords'], id: json['id']);
   }
 
   Map<String, dynamic> toJson() => {
         'name': name,
         'icon': icon,
         'keywords': keywords,
+        'id': id,
       };
 
   Icon getIcon() {

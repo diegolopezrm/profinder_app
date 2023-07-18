@@ -73,8 +73,114 @@ class _ProfilePrestadorConfigScreenState
     }
   }
 
+  // Agrega un botón flotante para ver el preview del ProfileCard
+  Widget _buildFloatingActionButton() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 50.0),
+      child: FloatingActionButton(
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return Dialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  child: Container(
+                    color: MyColors.primary,
+                    child: Column(
+                      children: <Widget>[
+                        //list of images in a vertical
+                        SizedBox(
+                          height: 300,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            reverse: true,
+                            itemCount: imageUrls.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  width: 300,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    image: DecorationImage(
+                                      image: NetworkImage(imageUrls[index]),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        Expanded(
+                          flex: 3,
+                          child: Container(
+                            color: Colors.transparent,
+                            child: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  const Text('Descripción',
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                          color: MyColors.lightGreen)),
+                                  Text(
+                                      descriptionController.text.isEmpty
+                                          ? 'Sin descripción'
+                                          : descriptionController.text,
+                                      style: const TextStyle(
+                                          fontSize: 12,
+                                          color: MyColors.secondary)),
+                                  const Text('Categorías:',
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                          color: MyColors.lightGreen)),
+                                  Wrap(
+                                    spacing: 6.0,
+                                    runSpacing: 6.0,
+                                    children: categoryControllers
+                                        .map((category) => Chip(
+                                              backgroundColor:
+                                                  MyColors.secondary,
+                                              label: Text(category.text,
+                                                  style: const TextStyle(
+                                                      color: MyColors.primary)),
+                                            ))
+                                        .toList(),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            );
+          },
+          child: const Icon(Icons.preview, color: MyColors.secondary)),
+    );
+  }
+
   Future<Image> _loadImage(String url) async {
     return Image.network(url, fit: BoxFit.fill);
+  }
+
+  //updtae only the mainService on firestore
+  Future<void> updateMainService(String mainServiceString) async {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .update({'mainService': mainServiceString});
   }
 
   @override
@@ -87,16 +193,37 @@ class _ProfilePrestadorConfigScreenState
           }
 
           var userData = snapshot.data!;
-          var serviceData = userData['service'];
-          descriptionController.text = serviceData['description'];
-          mainCategory = userData['mainService'];
-          imageUrls = serviceData['images'].cast<String>();
+          var serviceData = userData.data()!.containsKey('service')
+              ? userData['service']
+              : null;
 
-          for (var i = 0; i < categoryControllers.length; i++) {
-            categoryControllers[i].text = serviceData['categories'][i];
+          if (serviceData == null) {
+            // si 'service' no existe, los campos deben estar vacíos
+            descriptionController.text = '';
+            mainCategory = '';
+            imageUrls = [];
+            categoryControllers.forEach((controller) => controller.text = '');
+          } else {
+            // si 'service' existe, llena los campos con los valores existentes
+            descriptionController.text = serviceData.containsKey('description')
+                ? serviceData['description']
+                : '';
+            mainCategory = userData.data()!.containsKey('mainService')
+                ? userData['mainService']
+                : '';
+            imageUrls = serviceData.containsKey('images')
+                ? serviceData['images'].cast<String>()
+                : [];
+            if (serviceData.containsKey('categories')) {
+              for (var i = 0; i < categoryControllers.length; i++) {
+                categoryControllers[i].text = serviceData['categories'][i];
+              }
+            }
           }
+
           return Scaffold(
             backgroundColor: MyColors.lightGreen,
+            floatingActionButton: _buildFloatingActionButton(),
             body: SingleChildScrollView(
               child: Form(
                 key: formKey,
@@ -186,14 +313,20 @@ class _ProfilePrestadorConfigScreenState
                             return const CircularProgressIndicator();
                           }
                           return DropdownButtonFormField<String>(
-                            value: mainCategory,
-                            items: snapshot.data!.docs
-                                .map((DocumentSnapshot document) {
-                              return DropdownMenuItem<String>(
-                                value: document.id,
-                                child: Text(document['name']),
-                              );
-                            }).toList(),
+                            value: mainCategory ?? 'default',
+                            items: <DropdownMenuItem<String>>[
+                              const DropdownMenuItem<String>(
+                                value: '',
+                                child: Text('Selecciona una categoría'),
+                              ),
+                              ...snapshot.data!.docs
+                                  .map((DocumentSnapshot document) {
+                                return DropdownMenuItem<String>(
+                                  value: document.id,
+                                  child: Text(document['name']),
+                                );
+                              }).toList(),
+                            ],
                             decoration: const InputDecoration(
                               labelText: 'Servicio Principal',
                               labelStyle: TextStyle(
@@ -214,11 +347,17 @@ class _ProfilePrestadorConfigScreenState
                             ),
                             onChanged: (String? newValue) {
                               setState(() {
-                                mainCategory = newValue;
+                                print(newValue);
+                                mainCategory =
+                                    newValue == 'default' ? '' : newValue;
+                                print(mainCategory);
+                                updateMainService(mainCategory!);
                               });
                             },
                             validator: (value) {
-                              if (value == null || value.isEmpty) {
+                              if (value == null ||
+                                  value.isEmpty ||
+                                  value == 'default') {
                                 return 'Por favor seleccione una opción';
                               }
                               return null;
@@ -309,6 +448,7 @@ class _ProfilePrestadorConfigScreenState
                         ),
                         onPressed: () {
                           if (formKey.currentState!.validate()) {
+
                             FirebaseFirestore.instance
                                 .collection('users')
                                 .doc(FirebaseAuth.instance.currentUser!.uid)
@@ -320,7 +460,7 @@ class _ProfilePrestadorConfigScreenState
                                 'description': descriptionController.text,
                                 'images': imageUrls,
                               },
-                              'mainService': mainCategory,
+
                             }).then((value) {
                               Get.snackbar(
                                 '¡Éxito!',
