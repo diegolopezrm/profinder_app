@@ -103,7 +103,7 @@ class _MainScreenState extends State<MainScreen> {
     return [
       const CategoryHomeScreen(),
       const ComingSoonScreen(),
-      const MyWidget(),
+      const ComingSoonScreen(),
       const ProfilePrestadorConfigScreen(),
       const ProfileScreen(),
       const SettingsScreen(),
