@@ -17,7 +17,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       backgroundColor: MyColors.white,
       appBar: AppBar(
         title: const Text(
-          'Configuracion',
+          'Configuración',
           style: TextStyle(
               fontSize: 25,
               fontWeight: FontWeight.bold,
@@ -30,10 +30,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
         child: Column(
           children: [
             const ListTile(
-              trailing: Padding(padding: EdgeInsets.only(right: 16), child: Text(
-                '0.6.0',
-                style: TextStyle(fontSize: 20, color: Colors.grey),
-              ),),
+              trailing: Padding(
+                padding: EdgeInsets.only(right: 16),
+                child: Text(
+                  '0.6.0',
+                  style: TextStyle(fontSize: 20, color: Colors.grey),
+                ),
+              ),
               title: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -88,36 +91,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             borderRadius: BorderRadius.circular(15.0)),
                         child: Container(
                           constraints: const BoxConstraints(maxHeight: 550),
-                          child: const SingleChildScrollView(
+                          child: SingleChildScrollView(
                             child: Padding(
-                              padding: EdgeInsets.all(16),
+                              padding: const EdgeInsets.all(16),
                               child: Column(
                                 children: [
-                                  Text(
-                                    'Privacy Policy',
+                                  const Text(
+                                    'Política de Privacidad',
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 20),
                                     textAlign: TextAlign.center,
                                   ),
-                                  Text(''),
-                                  Text(
-                                      'Thank you for visiting the website of Placeholder Management LLC ("Placeholder Management LLC", the “Firm”). By accessing this website (the “Site”), you agree to accept the following Terms of Use for the use of the Site, which constitute a legal agreement between you and Placeholder Management LLC. If you do not accept these Terms of Use, you may not use the Site. Placeholder Management LLC reserves the right to modify these Terms of Use without notice, and each use of the Site constitutes your acceptance to be bound by the terms set forth in the Terms of Use as modified at the time of such use.'),
-                                  Text(''),
-                                  Text(
-                                      'Under no circumstances should any information or materials presented on the Site be used or construed as an offer to sell, or a solicitation of an offer to buy, any securities, financial instruments, investments or other services. Furthermore, no information or materials contained in the Site should be construed or relied upon as investment, legal, accounting, tax or other professional advice or in connection with any offer or sale of securities. Placeholder Management LLC will not treat users of the Site as partners, clients, customers or investors by virtue of their accessing the Site. '),
-                                  Text(''),
-                                  Text(
-                                      'The Site may contain forward-looking statements, which reflect Placeholder Management LLC’s current views with respect to, among other things, the operations and performance of the Firm. You can identify these forward-looking statements by the use of words such as “anticipate” “approximately,” “believe,” “continue,” “estimate,” “”expect,” “intend,” “may,” “outlook,” “plan,” “potential,” “predict,” “seek,” “should,” or “will,” or the negative version of these words or other comparable words. Forward-looking statements are subject to various risks and uncertainties. Accordingly, there are or will be important factors that could cause actual outcomes or results to differ materially from those indicated in these statements. Placeholder Management LLC undertakes no obligation to publicly update or review any forward-looking statement, whether as a result of new information, future developments or otherwise. '),
-                                  Text(''),
-                                  Text(
-                                      'The Site may contain forward-looking statements, which reflect Placeholder Management LLC’s current views with respect to, among other things, the operations and performance of the Firm. You can identify these forward-looking statements by the use of words such as “anticipate” “approximately,” “believe,” “continue,” “estimate,” “”expect,” “intend,” “may,” “outlook,” “plan,” “potential,” “predict,” “seek,” “should,” or “will,” or the negative version of these words or other comparable words. Forward-looking statements are subject to various risks and uncertainties. Accordingly, there are or will be important factors that could cause actual outcomes or results to differ materially from those indicated in these statements. Placeholder Management LLC undertakes no obligation to publicly update or review any forward-looking statement, whether as a result of new information, future developments or otherwise. '),
-                                  Text(''),
-                                  Text(
-                                      'The Site may contain forward-looking statements, which reflect Placeholder Management LLC’s current views with respect to, among other things, the operations and performance of the Firm. You can identify these forward-looking statements by the use of words such as “anticipate” “approximately,” “believe,” “continue,” “estimate,” “”expect,” “intend,” “may,” “outlook,” “plan,” “potential,” “predict,” “seek,” “should,” or “will,” or the negative version of these words or other comparable words. Forward-looking statements are subject to various risks and uncertainties. Accordingly, there are or will be important factors that could cause actual outcomes or results to differ materially from those indicated in these statements. Placeholder Management LLC undertakes no obligation to publicly update or review any forward-looking statement, whether as a result of new information, future developments or otherwise. '),
-                                  Text(''),
-                                  Text(
-                                      'The Site may contain forward-looking statements, which reflect Placeholder Management LLC’s current views with respect to, among other things, the operations and performance of the Firm. You can identify these forward-looking statements by the use of words such as “anticipate” “approximately,” “believe,” “continue,” “estimate,” “”expect,” “intend,” “may,” “outlook,” “plan,” “potential,” “predict,” “seek,” “should,” or “will,” or the negative version of these words or other comparable words. Forward-looking statements are subject to various risks and uncertainties. Accordingly, there are or will be important factors that could cause actual outcomes or results to differ materially from those indicated in these statements. Placeholder Management LLC undertakes no obligation to publicly update or review any forward-looking statement, whether as a result of new information, future developments or otherwise. '),
+                                  const Text(''),
+                                  const Text(
+                                      'Gracias por usar la aplicación Profinder ("Profinder", "la Aplicación"). Al acceder a nuestra Aplicación, aceptas cumplir con los siguientes términos de nuestra Política de Privacidad, que constituyen un acuerdo legal entre tú y Profinder. Si no aceptas estos términos, no debes utilizar la Aplicación. Profinder se reserva el derecho de modificar esta Política de Privacidad sin previo aviso, y cada uso de la Aplicación implica tu aceptación a cumplir con los términos establecidos en la Política de Privacidad tal como se hayan modificado en el momento de dicho uso.'),
+                                  const Text(''),
+                                  const Text(
+                                      'La información o materiales presentados en la Aplicación no deberán ser utilizados o interpretados como una oferta de venta, o una solicitud de una oferta de compra, de cualquier tipo de servicios. Además, ninguna información o material contenido en la Aplicación debe ser interpretado o utilizado como asesoramiento de inversión, legal, contable, fiscal o de otro tipo en conexión con cualquier oferta o venta de servicios. Profinder no tratará a los usuarios de la Aplicación como socios, clientes, o inversores por el hecho de que accedan a la Aplicación.'),
+                                  const Text(''),
+                                  const Text(
+                                      'La Aplicación puede contener declaraciones de futuro, que reflejan las opiniones actuales de Profinder con respecto a, entre otras cosas, las operaciones y el rendimiento de la Aplicación. Puedes identificar estas declaraciones de futuro por el uso de palabras como "anticipar", "aproximadamente", "creer", "continuar", "estimar", "esperar", "intentar", "puede", "perspectiva", "plan", "potencial", "predecir", "buscar", "debería", o "voluntad", o la versión negativa de estas palabras u otras palabras comparables. Las declaraciones de futuro están sujetas a diversos riesgos e incertidumbres. En consecuencia, existen o habrá factores importantes que podrían hacer que los resultados o desenlaces reales difieran sustancialmente de los indicados en estas declaraciones. Profinder no asume ninguna obligación de actualizar o revisar públicamente ninguna declaración de futuro, ya sea como resultado de nueva información, desarrollos futuros o de otro tipo. '),
                                 ],
                               ),
                             ),
@@ -152,7 +146,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15.0)),
                         child: Container(
-                          constraints: const BoxConstraints(maxHeight: 550, maxWidth: 500),
+                          constraints: const BoxConstraints(
+                              maxHeight: 550, maxWidth: 500),
                           child: SingleChildScrollView(
                             child: Padding(
                               padding: const EdgeInsets.all(16),
@@ -174,7 +169,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                       ),
                                     ),
                                   ),
-                                  const SizedBox(height: 8,),
+                                  const SizedBox(
+                                    height: 8,
+                                  ),
                                   const Align(
                                     alignment: Alignment.center,
                                     child: Text(
