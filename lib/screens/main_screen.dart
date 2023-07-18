@@ -12,6 +12,7 @@ import 'package:profinder_app/widgets/upload_data.dart';
 import '../controller/auth_controller.dart';
 import '../routes/app_routes.dart';
 
+import '../widgets/settings_screen.dart';
 import '../widgets/profile.dart';
 
 class MainScreen extends StatefulWidget {
@@ -73,6 +74,7 @@ class _MainScreenState extends State<MainScreen> {
       const CategoryHomeScreen(),
       const Placeholder(),
       const ProfileScreen(),
+      const SettingsScreen(),
     ];
   }
 
@@ -83,6 +85,8 @@ class _MainScreenState extends State<MainScreen> {
       const Placeholder(),
       const ProfilePrestadorConfigScreen(),
       const ProfileScreen(),
+      const SettingsScreen(),
+
     ];
   }
 
@@ -99,6 +103,7 @@ class _MainScreenState extends State<MainScreen> {
       const Icon(Icons.home, size: 30, color: MyColors.primary),
       const Icon(Icons.history, size: 30, color: MyColors.primary),
       const Icon(Icons.person, size: 30, color: MyColors.primary),
+      const Icon(Icons.settings, size: 30, color: MyColors.primary),
     ];
   }
 
@@ -109,6 +114,7 @@ class _MainScreenState extends State<MainScreen> {
       const Icon(Icons.work, size: 30, color: MyColors.primary),
       const Icon(Icons.build, size: 30, color: MyColors.primary),
       const Icon(Icons.person, size: 30, color: MyColors.primary),
+      const Icon(Icons.settings, size: 30, color: MyColors.primary),
     ];
   }
 
