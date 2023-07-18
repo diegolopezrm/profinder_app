@@ -75,7 +75,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     return Scaffold(
       extendBodyBehindAppBar: true,
-      backgroundColor: MyColors.white,
+      backgroundColor: MyColors.lightGreen,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -138,7 +138,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   minRadius: 60.0,
                                   child: CircleAvatar(
                                     radius: 50.0,
-                                    backgroundImage: userData.profilepic == ' '
+                                    backgroundImage: userData.profilepic == null
                                         ? const NetworkImage(
                                             'https://cdn.pixabay.com/photo/2017/11/10/05/48/user-2935527_1280.png')
                                         : NetworkImage(userData.profilepic!),
@@ -186,7 +186,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Text(
                         'Ultima conexion: ${userData.lastConnection!.day.toString()}/${userData.lastConnection!.month.toString()}/${userData.lastConnection!.year.toString()}',
                         style: const TextStyle(
-                          fontSize: 25,
+                          fontSize: 15,
                           fontWeight: FontWeight.normal,
                           color: MyColors.white,
                         ),
@@ -200,9 +200,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: <Widget>[
                       const SizedBox(height: 30),
                       const Text(
-                        'Informacion personal:',
+                        'Informacion personal',
                         style: TextStyle(
-                            color: Colors.black,
+                            color: MyColors.primary,
                             fontSize: 30,
                             fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
@@ -281,8 +281,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ],
                   ),
                 ),
+                //button to convert account to prestador de servicios
+                SizedBox(
+                  width: 300,
+                  height: 50,
+                  child: TextButton(
+                    onPressed: () async {
+                      await authController.convertToPrestador();
+                      Get.offAllNamed('/prestador-home');
+                    },
+                    child: const Text(
+                      'Convertir a prestador de servicios',
+                      style: TextStyle(
+                          color: MyColors.primary,
+                          fontSize: 15,
+                          fontWeight: FontWeight.normal),
+                    ),
+                  ),
+                ),
                 //button to close session
-                Container(
+                SizedBox(
                   width: 300,
                   height: 50,
                   child: ElevatedButton(
@@ -307,7 +325,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
 
-                const SizedBox(height: 70),
+                const SizedBox(height: 120),
               ]);
             } else if (snapshot.hasError) {
               return Center(child: Text(snapshot.error.toString()));

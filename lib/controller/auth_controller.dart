@@ -63,7 +63,39 @@ class AuthController extends GetxController {
     }
   }
 
+  void updateLocalUser(AppUser user) {
+    _user.value = user;
+  }
+
   void signOut() {
     _auth.signOut().then((value) => Get.offAllNamed(AppRoutes.authLogin));
+  }
+
+  Future<void> convertToPrestador() async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid != null) {
+      FirebaseFirestore.instance.collection('users').doc(uid).update({
+        'role': 'prestador'
+      });
+    } else {
+      Get.snackbar("Error", "Algo salio mal en profile controller",
+          backgroundColor: MyColors.secondary,
+          colorText: MyColors.primary,
+          snackPosition: SnackPosition.TOP);
+    }
+  }
+
+  Future<void> convertToCliente() async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid != null) {
+      FirebaseFirestore.instance.collection('users').doc(uid).update({
+        'role': 'cliente'
+      });
+    } else {
+      Get.snackbar("Error", "Algo salio mal en profile controller",
+          backgroundColor: MyColors.secondary,
+          colorText: MyColors.primary,
+          snackPosition: SnackPosition.TOP);
+    }
   }
 }

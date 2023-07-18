@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
+import 'package:profinder_app/controller/tab_controller.dart';
 import '../../controller/auth_controller.dart';
 import '../../models/category.dart';
 import '../../utils/my_colors.dart';
@@ -28,6 +31,7 @@ class _CategoryHomeScreenState extends State<CategoryHomeScreen> {
   Future<List<Category>> _getCategories() {
     return FirebaseFirestore.instance
         .collection('serviceCategories')
+        .orderBy('name', descending: false)
         .get()
         .then((snapshot) =>
             snapshot.docs.map((doc) => Category.fromJson(doc.data())).toList());
@@ -39,11 +43,13 @@ class _CategoryHomeScreenState extends State<CategoryHomeScreen> {
     }
     return categories
         .where((category) =>
-            category.name.toLowerCase().contains(_searchText.toLowerCase()) ||
-            category.keywords.any((keyword) =>
+            category.name!.toLowerCase().contains(_searchText.toLowerCase()) ||
+            category.keywords!.any((keyword) =>
                 keyword.toLowerCase().contains(_searchText.toLowerCase())))
         .toList();
   }
+
+  //check if the user is prestador, if yes check if he has a service information, if not, show a message and a button to go to tab 3
 
   @override
   Widget build(BuildContext context) {
@@ -77,6 +83,7 @@ class _CategoryHomeScreenState extends State<CategoryHomeScreen> {
                           textAlign: TextAlign.start,
                         ),
                         const SizedBox(height: 10),
+                       
                         const Text(
                           '¿Qué servicio necesitas?',
                           style: TextStyle(
@@ -101,7 +108,8 @@ class _CategoryHomeScreenState extends State<CategoryHomeScreen> {
                     },
                     decoration: const InputDecoration(
                       labelText: 'Buscar servicio por nombre o palabra clave',
-                      labelStyle: TextStyle(color: MyColors.lightGreen, fontSize: 15),
+                      labelStyle:
+                          TextStyle(color: MyColors.lightGreen, fontSize: 15),
                       border: OutlineInputBorder(
                           borderSide: BorderSide(color: MyColors.lightGreen),
                           borderRadius:
@@ -159,7 +167,7 @@ class _CategoryHomeScreenState extends State<CategoryHomeScreen> {
                                 icon,
                                 const SizedBox(height: 8.0),
                                 Text(
-                                  name,
+                                  name!,
                                   textAlign: TextAlign.center,
                                   //if text is too long, it will be replaced with ellipsis. only two lines
                                   overflow: TextOverflow.ellipsis,
